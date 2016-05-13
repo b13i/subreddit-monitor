@@ -3,7 +3,7 @@
 let request = require('request');
 let util    = require('util');
 let _       = require('lodash');
-let email   = require('email');
+let email   = require('./email');
 
 const AMEX_PLATINUM_REGEX = /.*(am|american|america|american|americans|american's).*(e|ex|express|express's|express'|expresses).*(plat|platinum)*.*(platinum|plat)*.*(100|100k|100000|100,000)*.*/gi
 
@@ -74,7 +74,7 @@ let sendEmailAlert = (subreddit, matchingPost) => {
     const postUrl = util.format('https://www.reddit.com%s', matchingPost.permalink);
 
     let subject = `[Reddit Monitor] - /r/${subreddit.page} - Possible Match for: ${subreddit.description}`;
-    let body = `Title of matching post: "${matchingPost.title}\n\nLink to reddit post: ${postUrl}"`;
+    let body = `Title of matching post: "${matchingPost.title}"\n\nLink to reddit post: ${postUrl}`;
 
     email({
         to: SUBSCRIBERS.join(', '),
@@ -98,5 +98,6 @@ let clearStaleMatches = maybeStaleMatches => {
 };
 
 const TEN_MINUTES = 1000 * 60 * 30;
+checkForNewMatches(REDDIT_INFO.subreddits);
 setInterval(() => checkForNewMatches(REDDIT_INFO.subreddits), TEN_MINUTES);
 
